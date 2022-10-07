@@ -21,7 +21,7 @@ async function main() {
   try {
     // Connect to the MongoDB cluster
     await client.connect();
-    console.log("test");
+    console.log("fh"); 
     console.log(process.env);
     console.log(process.env.MONGO_URL);
 
