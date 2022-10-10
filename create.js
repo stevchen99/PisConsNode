@@ -1,4 +1,5 @@
 const { MongoClient } = require("mongodb");
+const mongoose = require('mongoose');
 require('dotenv').config();
 
 async function main() {
@@ -15,24 +16,20 @@ async function main() {
    * pass option { useUnifiedTopology: true } to the MongoClient constructor.
    * const client =  new MongoClient(uri, {useUnifiedTopology: true})
    */
-  const client = new MongoClient(uri);
+  //const client = new MongoClient(uri);
 
   try {
     // Connect to the MongoDB cluster
-    await client.connect();
+    //await client.connect();
+    await mongoose.connect(uri);
 
     // Make the appropriate DB calls
 
     // Create a single new listing
-    await createListing(client, {
-     date:"12.10.2022",
-     pool:"sdfds Verne",
-     point: 10,
-     isAdd:false
-    });
+    await createListing();
   } finally {
     // Close the connection to the MongoDB cluster
-    await client.close();
+    await mongoose.connection.close()
   }
 }
 
@@ -43,13 +40,42 @@ main().catch(console.error);
  * @param {MongoClient} client A MongoClient that is connected to a cluster with the sample_airbnb database
  * @param {Object} newListing The new listing to be added
  */
-async function createListing(client, newListing) {
+async function createListing() {
   // See https://mongodb.github.io/node-mongodb-native/3.6/api/Collection.html#insertOne for the insertOne() docs
-  const result = await client
-    .db("ExtApp")
-    .collection("PointPiscine")
-    .insertOne(newListing);
-  console.log(
-    `New listing created with the following id: ${result.insertedId}`
-  );
+  // const result = await client
+  //   .db("ExtApp")
+  //   .collection("PointPiscine")
+  //   .insertOne(newListing);
+  // console.log(
+  //   `New listing created with the following id: ${result.insertedId}`
+  // );
+
+  const piscSchema = new mongoose.Schema({
+    name: String,
+    date: { type: Date, default: Date.now },
+    pool: String,
+    point: Number,
+    isAdd:Boolean
+  });
+
+  const piscModel = mongoose.model('piscModel', piscSchema);
+
+  var itemPisc = new piscModel({  
+    date:"12.10.2022",
+    pool:"dsfs",
+    point: 70,
+    isAdd:false 
+  });
+
+  // piscModel.create(itemPisc, function (err, small) {
+  //   if (err) return handleError(err);
+  //   // saved!
+  // });
+
+  itemPisc.save(function (err, res) {
+      if (err) console.error(err);
+      console.log(res)
+    });
+
+
 }

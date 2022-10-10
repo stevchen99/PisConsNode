@@ -2,6 +2,7 @@
 var express = require("express");
 require('dotenv').config();
 const { MongoClient } = require("mongodb");
+const mongoose = require('mongoose');
 
 async function main() {
   /**
@@ -16,19 +17,20 @@ async function main() {
    * pass option { useUnifiedTopology: true } to the MongoClient constructor.
    * const client =  new MongoClient(uri, {useUnifiedTopology: true})
    */
-  const client = new MongoClient(uri);
+  //const client = new MongoClient(uri);
 
   try {
     // Connect to the MongoDB cluster
-    await client.connect();
-    console.log("fh"); 
-    console.log(process.env);
-    console.log(process.env.MONGO_URL);
+    //await client.connect();
+    await mongoose.connect(uri);
+    console.log("OKE"); 
+    
 
     // Make the appropriate DB calls
   } finally {
     // Close the connection to the MongoDB cluster
-    await client.close();
+    //await client.close();
+       await mongoose.connection.close()
   }
 }
 
