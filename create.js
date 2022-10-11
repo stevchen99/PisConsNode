@@ -44,11 +44,15 @@ async function createListing() {
     isAdd:false 
   });
 
- 
-  itemPisc.save(function (err, res) {
-      if (err) console.error(err);
-      console.log(res)
-    });
+  try {
+    console.log(await itemPisc.save());
+  } catch (err) {
+    console.log(err);
+  }
+  // itemPisc.save(function (err, res) {
+  //     if (err) console.error(err);
+  //     console.log(res)
+  //   });
 
     console.log("fin function call")
 

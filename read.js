@@ -3,34 +3,17 @@ const { MongoClient } = require('mongodb');
 const mongoose = require('mongoose');
 
 async function main() {
-    /**
-     * Connection URI. Update <username>, <password>, and <your-cluster-url> to reflect your cluster.
-     * See https://docs.mongodb.com/drivers/node/ for more details
-     */
-     const uri = process.env.MONGO_URL;
-    /**
-     * The Mongo Client you will use to interact with your database
-     * See https://mongodb.github.io/node-mongodb-native/3.6/api/MongoClient.html for more details
-     * In case: '[MONGODB DRIVER] Warning: Current Server Discovery and Monitoring engine is deprecated...'
-     * pass option { useUnifiedTopology: true } to the MongoClient constructor.
-     * const client =  new MongoClient(uri, {useUnifiedTopology: true})
-     */
-    //const client = new MongoClient(uri);
+
+    const uri = process.env.MONGO_URL;
 
     try {
         // Connect to the MongoDB cluster
-        //await client.connect();
-
         await mongoose.connect(uri);
-
-        // Make the appropriate DB calls
-
-        // Find the listing named "Infinite Views" that we created in create.js
-       //
-        await findOneListingByName(mongoose, 10);
+       
+        //await findOneListingByName(mongoose, 10);
 
         await findAll();
-       
+
 
     } finally {
         // Close the connection to the MongoDB cluster
@@ -40,19 +23,28 @@ async function main() {
 
 main().catch(console.error);
 
-async function findAll(){
+async function findAll() {
     const piscSchema = new mongoose.Schema({
         name: String,
         date: { type: Date, default: Date.now },
         pool: String,
         point: Number,
-        isAdd:Boolean
-      });
+        isAdd: Boolean
+    });
 
-      const piscModel = mongoose.model('piscModel', piscSchema, 'PointPiscine');
+    const piscModel = mongoose.model('piscModel', piscSchema, 'PointPiscine');
 
-      const result = piscModel.find({});
-      console.log(result);
+    // const result = piscModel.find({});
+    // console.log(result);
+
+    try {
+        console.log(await  piscModel.find({}))
+      } catch (err) {
+        console.log(err);
+      }
+    // piscModel.find({}, function (err, docs) {
+    //     console.log(docs)
+    //    });
 }
 
 /**
@@ -70,12 +62,12 @@ async function findOneListingByName(client, nameOfListing) {
         date: { type: Date, default: Date.now },
         pool: String,
         point: Number,
-        isAdd:Boolean
-      });
+        isAdd: Boolean
+    });
 
-      const piscModel = mongoose.model('piscModel', piscSchema, 'PointPiscine');
+    const piscModel = mongoose.model('piscModel', piscSchema, 'PointPiscine');
 
-      const result = piscModel.find({ point: 100 });
+    const result = piscModel.find({ point: 100 });
 
 
     if (result) {
