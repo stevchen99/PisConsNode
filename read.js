@@ -26,8 +26,10 @@ async function main() {
         // Make the appropriate DB calls
 
         // Find the listing named "Infinite Views" that we created in create.js
+       //
         await findOneListingByName(mongoose, 10);
 
+        await findAll();
        
 
     } finally {
@@ -37,6 +39,21 @@ async function main() {
 }
 
 main().catch(console.error);
+
+async function findAll(){
+    const piscSchema = new mongoose.Schema({
+        name: String,
+        date: { type: Date, default: Date.now },
+        pool: String,
+        point: Number,
+        isAdd:Boolean
+      });
+
+      const piscModel = mongoose.model('piscModel', piscSchema, 'PointPiscine');
+
+      const result = piscModel.find({});
+      console.log(result);
+}
 
 /**
  * Print an Airbnb listing with the given name
@@ -56,9 +73,9 @@ async function findOneListingByName(client, nameOfListing) {
         isAdd:Boolean
       });
 
-      const piscModel = mongoose.model('piscModel', piscSchema);
+      const piscModel = mongoose.model('piscModel', piscSchema, 'PointPiscine');
 
-      const result = piscModel.find({ point: 0 });
+      const result = piscModel.find({ point: 100 });
 
 
     if (result) {
